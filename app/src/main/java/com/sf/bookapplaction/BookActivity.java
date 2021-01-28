@@ -111,6 +111,8 @@ public class BookActivity extends AppCompatActivity {
             }
         });
 
+
+
         // set recyclerView data.
 
         List<String> settingList = new ArrayList<>();
@@ -124,20 +126,23 @@ public class BookActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(new HorizontalAdapter(this, settingList));
 
-
-        // open book
-        if (!TextUtils.isEmpty(mFilePath)) {
-            try {
-                mHelper.openBook(mFilePath);
-                mHelper.draw(new Canvas(mCurrentPageBitmap));
-                mBookPageView.invalidate();
-            } catch (IOException e) {
-                e.printStackTrace();
-                // todo  can not find the book path
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                openBookByProgress(R.drawable.book_bg, seekBar.getProgress()* mTotalLength /100);
             }
-        } else {
-            // todo  can not find the book path
-        }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                openBookByProgress(R.drawable.book_bg, seekBar.getProgress()* mTotalLength /100);
+            }
+        });
+
     }
 
     private void openBookByProgress(int backgroundResourceID, int progress) {
