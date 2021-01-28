@@ -31,6 +31,7 @@ public class BookActivity extends AppCompatActivity {
     private Bitmap mNextPageBitmap;
     private String mFilePath;
     private int mTotalLength;
+    private int mCurrentLength;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,18 @@ public class BookActivity extends AppCompatActivity {
         mNextPageBitmap = Bitmap.createBitmap(mWidth, mHeight, Bitmap.Config.ARGB_8888);
         mBookPageView.setBitmaps(mCurrentPageBitmap, mNextPageBitmap);
 
+        // set background
+        mHelper.setBackground(this, R.drawable.book_bg);
+
+        //set progress
+        mHelper.setOnProgressChangedListener(new BookPageBezierHelper.OnProgressChangedListener() {
+            @Override
+            public void setProgress(int currentLength, int totalLength) {
+                mCurrentLength = currentLength;
+                float progress = mCurrentLength * 100 / totalLength;
+                mProgressTextView.setText(String.format("%s%%", progress));
+            }
+        });
 
         // open book
         if (!TextUtils.isEmpty(mFilePath)) {
